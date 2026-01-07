@@ -1,5 +1,6 @@
 package org.example.bankback;
 
+import org.example.bankback.domain.models.Cliente;
 import org.example.bankback.domain.models.CuentaBancaria;
 import org.example.bankback.domain.models.MovimientoBancario;
 import org.example.bankback.domain.models.TarjetaCredito;
@@ -61,6 +62,11 @@ public class SpringConfig {
         return new ClientRepository() {
             @Override
             public Optional<org.example.bankback.domain.models.Cliente> findByUsername(String username) {
+                return Optional.empty();
+            }
+
+            @Override
+            public Optional<Cliente> findByApiToken(String apiToken) {
                 return Optional.empty();
             }
         };
