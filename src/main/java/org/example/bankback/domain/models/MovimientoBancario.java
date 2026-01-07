@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class MovimientoBancario {
+    Long id;
     TipoMovimientoBancario tipoMovimientoBancario;
     OrigenMovimientoBancario origenMovimientoBancario;
     TarjetaCredito tarjetaCreditoOrigen;
