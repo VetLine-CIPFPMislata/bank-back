@@ -1,9 +1,10 @@
-package org.example.bankback.domain.repository;
+package org.example.bankback.persistence.dao;
 
 import org.example.bankback.domain.models.Client;
+
 import java.util.Optional;
 
-public interface ClientRepository {
+public interface ClientJpaDao {
     Optional<Client> findByUsername(String username);
     Optional<Client> findByApiToken(String apiToken);
 }

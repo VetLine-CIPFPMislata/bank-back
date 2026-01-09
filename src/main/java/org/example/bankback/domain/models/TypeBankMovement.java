@@ -1,6 +1,6 @@
 package org.example.bankback.domain.models;
 
-public enum TipoMovimientoBancario {
+public enum TypeBankMovement {
     DEBE,
     HABER
 }

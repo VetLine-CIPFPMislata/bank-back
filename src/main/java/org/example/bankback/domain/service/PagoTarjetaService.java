@@ -1,9 +1,8 @@
 package org.example.bankback.domain.service;
 
-import org.example.bankback.controller.webmodel.request.PagoTarjetaRequest;
-import org.example.bankback.controller.webmodel.response.PagoTarjetaResponse;
+import org.example.bankback.domain.models.dto.PagoTarjetaDTO;
+import org.example.bankback.domain.models.dto.PagoTarjetaResponseDTO;
 
 public interface PagoTarjetaService {
-    PagoTarjetaResponse procesarPago(PagoTarjetaRequest request);
+    PagoTarjetaResponseDTO procesarPago(PagoTarjetaDTO request);
 }
-

@@ -1,11 +1,10 @@
-package org.example.bankback.domain.service;
+package org.example.bankback.persistence.dao;
 
 import org.example.bankback.domain.models.CreditCard;
 
-
 import java.util.Optional;
 
-public interface CreditCardService {
+public interface CreditCardJpaDao {
     Optional<CreditCard> findByCardNumber(String cardNumber);
     Optional<CreditCard> findByName(String name);
 }

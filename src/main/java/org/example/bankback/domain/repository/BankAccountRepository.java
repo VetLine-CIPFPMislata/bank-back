@@ -1,12 +1,11 @@
 package org.example.bankback.domain.repository;
 
 
-import org.example.bankback.domain.models.CuentaBancaria;
-
-import java.math.BigDecimal;
+import org.example.bankback.domain.models.BankAccount;
 import java.util.Optional;
 
 public interface BankAccountRepository {
-    Optional<CuentaBancaria> findById(Long id);
-    Optional<CuentaBancaria> findByIBAN(BigDecimal iban);
+    Optional<BankAccount> findById(Long id);
+    Optional<BankAccount> findByIBAN(String iban);
+    BankAccount save(BankAccount bankAccount);
 }

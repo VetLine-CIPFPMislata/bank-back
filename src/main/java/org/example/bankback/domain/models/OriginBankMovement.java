@@ -1,6 +1,6 @@
 package org.example.bankback.domain.models;
 
-public enum OrigenMovimientoBancario {
+public enum OriginBankMovement {
     TRANSFERENCIA,
     DOMICILIACION,
     TARJETA

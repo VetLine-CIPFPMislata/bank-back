@@ -1,9 +1,9 @@
 package org.example.bankback.domain.repository;
 
-import org.example.bankback.domain.models.TarjetaCredito;
+import org.example.bankback.domain.models.CreditCard;
 import java.util.Optional;
 
 public interface CreditCardRepository {
-    Optional<TarjetaCredito> findByCardNumber(String cardNumber);
-    Optional<TarjetaCredito> findByName(String name);
+    Optional<CreditCard> findByCardNumber(String cardNumber);
+    Optional<CreditCard> findByName(String name);
 }
