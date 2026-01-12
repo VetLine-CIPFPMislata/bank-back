@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional
@@ -66,5 +68,18 @@ public class BankMovementJpaDaoImpl implements BankMovementJpaDao {
         }
 
         return MapperPersistence.getInstance().fromBankMovementJpaEntityToBankMovement(entity);
+    }
+
+    @Override
+    public List<BankMovement> findAllByCreditCardId(Long creditCardId) {
+        TypedQuery<BankMovementJpaEntity> query = entityManager.createQuery(
+                "SELECT b FROM BankMovementJpaEntity b WHERE b.tarjetaCreditoOrigen.id = :creditCardId",
+                BankMovementJpaEntity.class
+        );
+        query.setParameter("creditCardId", creditCardId);
+
+        return query.getResultList().stream()
+                .map(MapperPersistence.getInstance()::fromBankMovementJpaEntityToBankMovement)
+                .collect(Collectors.toList());
     }
 }

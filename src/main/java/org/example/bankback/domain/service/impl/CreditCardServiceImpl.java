@@ -5,6 +5,7 @@ import org.example.bankback.domain.repository.CreditCardRepository;
 import org.example.bankback.domain.service.CreditCardService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +25,10 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Optional<CreditCard> findByName(String name) {
         return creditCardRepository.findByName(name);
+    }
+
+    @Override
+    public List<CreditCard> findByBankAccountId(Long bankAccountId) {
+        return creditCardRepository.findByBankAccountId(bankAccountId);
     }
 }

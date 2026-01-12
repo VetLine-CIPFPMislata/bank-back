@@ -1,6 +1,5 @@
 package org.example.bankback.domain.service.impl;
 
-import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.BankMovement;
 import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.repository.BankMovementRepository;
@@ -8,6 +7,7 @@ import org.example.bankback.domain.service.BankMovementService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,5 +36,10 @@ public class BankMovementServiceImpl implements BankMovementService {
     @Override
     public BankMovement save(BankMovement bankMovement) {
         return bankMovementRepository.save(bankMovement);
+    }
+
+    @Override
+    public List<BankMovement> findAllByCreditCardId(Long creditCardId) {
+        return bankMovementRepository.findAllByCreditCardId(creditCardId);
     }
 }

@@ -10,7 +10,9 @@ import org.example.bankback.persistence.repository.mapper.MapperPersistence;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 public class CreditCardJpaDaoImpl implements CreditCardJpaDao {
@@ -43,5 +45,17 @@ public class CreditCardJpaDaoImpl implements CreditCardJpaDao {
                 .findFirst()
                 .map(MapperPersistence.getInstance()::fromCreditCardJpaEntityToCreditCard);
     }
-}
 
+    @Override
+    public List<CreditCard> findByBankAccountId(Long bankAccountId) {
+        TypedQuery<CreditCardJpaEntity> query = entityManager.createQuery(
+                "SELECT c FROM CreditCardJpaEntity c WHERE c.idCuentaBancaria = :bankAccountId",
+                CreditCardJpaEntity.class
+        );
+        query.setParameter("bankAccountId", bankAccountId);
+
+        return query.getResultList().stream()
+                .map(MapperPersistence.getInstance()::fromCreditCardJpaEntityToCreditCard)
+                .collect(Collectors.toList());
+    }
+}

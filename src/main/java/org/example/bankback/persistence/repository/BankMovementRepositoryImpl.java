@@ -7,6 +7,7 @@ import org.example.bankback.persistence.dao.BankMovementJpaDao;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class BankMovementRepositoryImpl implements BankMovementRepository {
@@ -35,5 +36,10 @@ public class BankMovementRepositoryImpl implements BankMovementRepository {
     @Override
     public BankMovement save(BankMovement bankMovement) {
         return bankMovementJpaDao.save(bankMovement);
+    }
+
+    @Override
+    public List<BankMovement> findAllByCreditCardId(Long creditCardId) {
+        return bankMovementJpaDao.findAllByCreditCardId(creditCardId);
     }
 }

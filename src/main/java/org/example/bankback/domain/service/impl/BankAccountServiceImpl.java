@@ -5,6 +5,7 @@ import org.example.bankback.domain.repository.BankAccountRepository;
 import org.example.bankback.domain.service.BankAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +29,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public BankAccount save(BankAccount bankAccount) {
         return bankAccountRepository.save(bankAccount);
+    }
+
+    @Override
+    public List<BankAccount> findByClientId(Long clientId) {
+        return bankAccountRepository.findByClientId(clientId);
     }
 }
