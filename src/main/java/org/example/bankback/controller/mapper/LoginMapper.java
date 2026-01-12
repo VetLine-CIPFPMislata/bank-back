@@ -11,44 +11,26 @@ public class LoginMapper {
     public LoginResponse toSuccessResponse(LoginService.LoginResult loginResult) {
         Client client = loginResult.getClient();
 
-        LoginResponse.ClientData clientData = new LoginResponse.ClientData(
-            client.getId(),
-            client.getUsername(),
-            client.getNombre(),
-            client.getApellido1(),
-            client.getApellido2(),
-            client.getDni()
-        );
-
         return new LoginResponse(
-            true,
-            "Login exitoso",
-            clientData
+            null,
+            client.getUsername(),
+            client.getNombre() + " " + client.getApellido1()
         );
     }
 
     public LoginResponse toSuccessResponseBasic(Client client) {
-        LoginResponse.ClientData clientData = new LoginResponse.ClientData(
-            client.getId(),
-            client.getUsername(),
-            client.getNombre(),
-            client.getApellido1(),
-            client.getApellido2(),
-            client.getDni()
-        );
-
         return new LoginResponse(
-            true,
-            "Login exitoso",
-            clientData
+            null,
+            client.getUsername(),
+            client.getNombre() + " " + client.getApellido1()
         );
     }
 
     public LoginResponse toErrorResponse(String mensaje) {
         return new LoginResponse(
-            false,
-            mensaje,
-            null
+            null,
+            null,
+            mensaje
         );
     }
 }

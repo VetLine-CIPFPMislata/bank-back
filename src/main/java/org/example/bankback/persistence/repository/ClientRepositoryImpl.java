@@ -21,7 +21,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Optional<Client> findByApiToken(String apiToken) {
-        return clientJpaDao.findByApiToken(apiToken);
+    public Optional<Client> findById(Long id) {
+        return clientJpaDao.findById(id);
     }
 }

@@ -31,15 +31,9 @@ public class ClientJpaDaoImpl implements ClientJpaDao {
     }
 
     @Override
-    public Optional<Client> findByApiToken(String apiToken) {
-        TypedQuery<ClientJpaEntity> query = entityManager.createQuery(
-                "SELECT c FROM ClientJpaEntity c WHERE c.api_token = :apiToken",
-                ClientJpaEntity.class
-        );
-        query.setParameter("apiToken", apiToken);
-
-        return query.getResultList().stream()
-                .findFirst()
+    public Optional<Client> findById(Long id) {
+        ClientJpaEntity entity = entityManager.find(ClientJpaEntity.class, id);
+        return Optional.ofNullable(entity)
                 .map(MapperPersistence.getInstance()::fromClientJpaEntityToClient);
     }
 }

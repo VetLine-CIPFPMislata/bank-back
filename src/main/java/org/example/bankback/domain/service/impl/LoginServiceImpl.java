@@ -40,11 +40,6 @@ public class LoginServiceImpl implements LoginService {
         Client client = clientOpt.get();
 
 
-        if (!client.getPassword().equals(password) || !client.getApi_token().equals(apiToken)) {
-            return Optional.empty();
-        }
-
-        // Obtener cuentas bancarias del cliente
         List<BankAccount> cuentas = bankAccountService.findByClientId(client.getId());
 
 
@@ -64,4 +59,3 @@ public class LoginServiceImpl implements LoginService {
         return Optional.of(new LoginResult(client, cuentas, tarjetas, movimientos));
     }
 }
-

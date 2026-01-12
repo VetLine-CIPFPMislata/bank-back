@@ -5,16 +5,8 @@ import org.example.bankback.domain.repository.BankAccountRepository;
 import org.example.bankback.domain.repository.BankMovementRepository;
 import org.example.bankback.domain.repository.ClientRepository;
 import org.example.bankback.domain.repository.CreditCardRepository;
-import org.example.bankback.domain.service.BankAccountService;
-import org.example.bankback.domain.service.BankMovementService;
-import org.example.bankback.domain.service.ClientService;
-import org.example.bankback.domain.service.CreditCardService;
-import org.example.bankback.domain.service.PagoTarjetaService;
-import org.example.bankback.domain.service.impl.BankAccountServiceImpl;
-import org.example.bankback.domain.service.impl.BankMovementServiceImpl;
-import org.example.bankback.domain.service.impl.ClientServiceImpl;
-import org.example.bankback.domain.service.impl.CreditCardServiceImpl;
-import org.example.bankback.domain.service.impl.PagoTarjetaServiceImpl;
+import org.example.bankback.domain.service.*;
+import org.example.bankback.domain.service.impl.*;
 import org.example.bankback.persistence.dao.BankAccountJpaDao;
 import org.example.bankback.persistence.dao.BankMovementJpaDao;
 import org.example.bankback.persistence.dao.ClientJpaDao;
@@ -75,13 +67,18 @@ public class SpringConfig {
     }
 
     @Bean
+    public BankApiTokenService bankApiTokenService() {
+        return new BankApiTokenServiceImpl();
+    }
+
+    @Bean
     public BankMovementService bankMovementService(BankMovementRepository bankMovementRepository) {
         return new BankMovementServiceImpl(bankMovementRepository);
     }
 
     @Bean
-    public ClientService clientService(ClientRepository clientRepository) {
-        return new ClientServiceImpl(clientRepository);
+    public ClientService clientService(ClientRepository clientRepository, PasswordEncryptionService passwordEncryptionService) {
+        return new ClientServiceImpl(clientRepository, passwordEncryptionService);
     }
 
     @Bean

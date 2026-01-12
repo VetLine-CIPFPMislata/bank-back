@@ -6,11 +6,10 @@ CREATE TABLE clients (
     nombre VARCHAR(100) NOT NULL,
     apellido1 VARCHAR(100) NOT NULL,
     apellido2 VARCHAR(100) NOT NULL,
-    dni VARCHAR(20) NOT NULL UNIQUE,
-    api_token VARCHAR(255) UNIQUE
-);
+    dni VARCHAR(20) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Índices para mejorar rendimiento
 CREATE INDEX idx_clients_username ON clients(username);
 CREATE INDEX idx_clients_dni ON clients(dni);
-CREATE INDEX idx_clients_api_token ON clients(api_token);
+

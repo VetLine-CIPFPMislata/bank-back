@@ -1,14 +1,11 @@
 package org.example.bankback.controller;
 
-import org.example.bankback.controller.mapper.LoginMapper;
 import org.example.bankback.controller.mapper.PagoTarjetaMapper;
-import org.example.bankback.controller.webmodel.request.LoginRequest;
 import org.example.bankback.controller.webmodel.request.PagoTarjetaRequest;
-import org.example.bankback.controller.webmodel.response.LoginResponse;
 import org.example.bankback.controller.webmodel.response.PagoTarjetaResponse;
+import org.example.bankback.domain.exception.ValidationException;
 import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.BankMovement;
-import org.example.bankback.domain.models.Client;
 import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.models.dto.PagoTarjetaDTO;
 import org.example.bankback.domain.models.dto.PagoTarjetaResponseDTO;
@@ -25,76 +22,73 @@ public class BankController {
 
     private final PagoTarjetaService pagoTarjetaService;
     private final PagoTarjetaMapper mapper;
-    private final ClientService clientService;
     private final BankAccountService bankAccountService;
     private final CreditCardService creditCardService;
     private final BankMovementService bankMovementService;
-    private final LoginMapper loginMapper;
+    private final BankApiTokenService bankApiTokenService;
+    private final AuthService authService;
 
     public BankController(PagoTarjetaService pagoTarjetaService,
                          PagoTarjetaMapper mapper,
-                         ClientService clientService,
                          BankAccountService bankAccountService,
                          CreditCardService creditCardService,
                          BankMovementService bankMovementService,
-                         LoginMapper loginMapper) {
+                         BankApiTokenService bankApiTokenService,
+                         AuthService authService) {
         this.pagoTarjetaService = pagoTarjetaService;
         this.mapper = mapper;
-        this.clientService = clientService;
         this.bankAccountService = bankAccountService;
         this.creditCardService = creditCardService;
         this.bankMovementService = bankMovementService;
-        this.loginMapper = loginMapper;
+        this.bankApiTokenService = bankApiTokenService;
+        this.authService = authService;
     }
 
     @PostMapping("/pago_tarjeta")
     public ResponseEntity<PagoTarjetaResponse> pagarConTarjeta(@RequestBody PagoTarjetaRequest request) {
+        if (!bankApiTokenService.validateApiToken(request.autorizacion().api_token())) {
+            throw new ValidationException("API Token inválido. No autorizado para procesar pagos");
+        }
+
         PagoTarjetaDTO dto = mapper.toDTO(request);
         PagoTarjetaResponseDTO responseDTO = pagoTarjetaService.procesarPago(dto);
         PagoTarjetaResponse response = mapper.toResponse(responseDTO);
 
-        if (!response.exito()) {
-            return ResponseEntity.badRequest().body(response);
-        }
         return ResponseEntity.ok(response);
     }
 
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        Optional<Client> clientOpt = clientService.findByUsername(request.username());
-
-        if (clientOpt.isEmpty()) {
-            return ResponseEntity.status(401).body(loginMapper.toErrorResponse("Credenciales inválidas"));
-        }
-
-        Client client = clientOpt.get();
-
-        // Validar password y api_token
-        if (!client.getPassword().equals(request.password()) ||
-            !client.getApi_token().equals(request.api_token())) {
-            return ResponseEntity.status(401).body(loginMapper.toErrorResponse("Credenciales inválidas"));
-        }
-
-        // Login exitoso - devolver solo datos básicos del cliente
-        LoginResponse successResponse = loginMapper.toSuccessResponseBasic(client);
-        return ResponseEntity.ok(successResponse);
-    }
-
-    // Endpoint para obtener las cuentas del cliente autenticado
     @GetMapping("/clientes/{clientId}/cuentas")
-    public ResponseEntity<List<BankAccount>> getCuentasByCliente(@PathVariable Long clientId) {
+    public ResponseEntity<List<BankAccount>> getCuentasByCliente(@PathVariable Long clientId,
+                                                                 @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        String token = extractTokenFromHeader(authHeader);
+        if (token == null) return ResponseEntity.status(401).build();
+
+        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
+
+        if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
+
         List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
         return ResponseEntity.ok(cuentas);
     }
 
-    // Endpoint para obtener las tarjetas del cliente autenticado
+
     @GetMapping("/clientes/{clientId}/tarjetas")
-    public ResponseEntity<List<CreditCard>> getTarjetasByCliente(@PathVariable Long clientId) {
-        // Primero obtener las cuentas del cliente
+    public ResponseEntity<List<CreditCard>> getTarjetasByCliente(@PathVariable Long clientId,
+                                                                 @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        String token = extractTokenFromHeader(authHeader);
+        if (token == null) return ResponseEntity.status(401).build();
+
+        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
+
+        if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
+
         List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
 
-        // Luego obtener todas las tarjetas de esas cuentas
+
         List<CreditCard> tarjetas = cuentas.stream()
             .flatMap(cuenta -> creditCardService.findByBankAccountId(cuenta.getId()).stream())
             .toList();
@@ -103,9 +97,17 @@ public class BankController {
     }
 
     @GetMapping("/clientes/{clientId}/movimientos")
-    public ResponseEntity<List<BankMovement>> getMovimientosByCliente(@PathVariable Long clientId) {
-        List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
+    public ResponseEntity<List<BankMovement>> getMovimientosByCliente(@PathVariable Long clientId,
+                                                                     @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        String token = extractTokenFromHeader(authHeader);
+        if (token == null) return ResponseEntity.status(401).build();
 
+        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
+
+        if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
+
+        List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
 
         List<CreditCard> tarjetas = cuentas.stream()
             .flatMap(cuenta -> creditCardService.findByBankAccountId(cuenta.getId()).stream())
@@ -118,18 +120,10 @@ public class BankController {
         return ResponseEntity.ok(movimientos);
     }
 
-
-    @GetMapping("/cuentas/{cuentaId}")
-    public ResponseEntity<BankAccount> getCuenta(@PathVariable Long cuentaId) {
-        Optional<BankAccount> cuenta = bankAccountService.findById(cuentaId);
-        return cuenta.map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-    }
-
-
-    @GetMapping("/tarjetas/{tarjetaId}/movimientos")
-    public ResponseEntity<List<BankMovement>> getMovimientosByTarjeta(@PathVariable Long tarjetaId) {
-        List<BankMovement> movimientos = bankMovementService.findAllByCreditCardId(tarjetaId);
-        return ResponseEntity.ok(movimientos);
+    private String extractTokenFromHeader(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
     }
 }

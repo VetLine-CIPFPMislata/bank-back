@@ -29,26 +29,25 @@ public class ClientJpaEntity {
     @Column(name= "dni", nullable = false, unique = true)
     private String dni;
 
-    @Column(name= "api_token", unique = true)
-    private String api_token;
-
     public ClientJpaEntity() {}
 
-    public ClientJpaEntity(Long id, String username, String password, String nombre, String apellido1, String apellido2, String dni, String api_token) {
+    public ClientJpaEntity(Long id, String username, String password, String nombre, String apellido1, String apellido2, String dni) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.api_token = api_token;
-    }
-
-    public ClientJpaEntity(String username, String password, String nombre, String apellido1, String apellido2, String dni, String api_token) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
         this.dni = dni;
-        this.api_token = api_token;
+    }
+
+    public ClientJpaEntity(String username, String password, String nombre, String apellido1, String apellido2, String dni) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.dni = dni;
     }
 
     public Long getId() {
@@ -105,13 +104,5 @@ public class ClientJpaEntity {
 
     public void setDni(String dni) {
         this.dni = dni;
-    }
-
-    public String getApi_token() {
-        return api_token;
-    }
-
-    public void setApi_token(String api_token) {
-        this.api_token = api_token;
     }
 }

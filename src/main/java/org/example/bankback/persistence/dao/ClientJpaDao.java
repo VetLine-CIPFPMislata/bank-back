@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ClientJpaDao {
     Optional<Client> findByUsername(String username);
-    Optional<Client> findByApiToken(String apiToken);
+    Optional<Client> findById(Long id);
 }

@@ -1,10 +1,10 @@
 -- Insertar datos iniciales de ejemplo
-
--- Insertar clientes de ejemplo
-INSERT INTO clients (username, password, nombre, apellido1, apellido2, dni, api_token) VALUES
-('jperez', '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'Juan', 'Pérez', 'García', '12345678A', 'token-juan-perez-123'),
-('mlopez', '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'María', 'López', 'Martínez', '87654321B', 'token-maria-lopez-456'),
-('agarcia', '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'Antonio', 'García', 'Rodríguez', '11223344C', 'token-antonio-garcia-789');
+-- Las contraseñas están encriptadas con BCrypt (contraseña original: "password123")
+-- Hash generado con BCrypt workload 10
+INSERT INTO clients (username, password, nombre, apellido1, apellido2, dni) VALUES
+('jperez', '$2a$10$gz4VW1ZResYvbq94LLnm0uid1nNS19R/VyZpo/II.MLVyFZdK65Je', 'Juan', 'Pérez', 'García', '12345678A'),
+('mlopez', '$2a$10$gz4VW1ZResYvbq94LLnm0uid1nNS19R/VyZpo/II.MLVyFZdK65Je', 'María', 'López', 'Martínez', '87654321B'),
+('agarcia', '$2a$10$gz4VW1ZResYvbq94LLnm0uid1nNS19R/VyZpo/II.MLVyFZdK65Je', 'Antonio', 'García', 'Rodríguez', '11223344C');
 
 -- Insertar cuentas bancarias de ejemplo
 INSERT INTO bank_accounts (iban, saldo, client_id) VALUES

@@ -90,8 +90,7 @@ public class MapperPersistence {
                 clientJpaEntity.getNombre(),
                 clientJpaEntity.getApellido1(),
                 clientJpaEntity.getApellido2(),
-                clientJpaEntity.getDni(),
-                clientJpaEntity.getApi_token()
+                clientJpaEntity.getDni()
         );
     }
 
@@ -106,8 +105,7 @@ public class MapperPersistence {
                 client.getNombre(),
                 client.getApellido1(),
                 client.getApellido2(),
-                client.getDni(),
-                client.getApi_token()
+                client.getDni()
         );
     }
 

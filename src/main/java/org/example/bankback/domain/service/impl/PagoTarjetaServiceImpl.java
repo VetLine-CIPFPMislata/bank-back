@@ -1,5 +1,6 @@
 package org.example.bankback.domain.service.impl;
 
+import org.example.bankback.domain.exception.ValidationException;
 import org.example.bankback.domain.models.dto.PagoTarjetaResponseDTO;
 import org.example.bankback.domain.models.dto.PagoTarjetaDTO;
 import org.example.bankback.domain.models.BankAccount;
@@ -39,142 +40,102 @@ public class PagoTarjetaServiceImpl implements PagoTarjetaService {
 
     @Override
     public PagoTarjetaResponseDTO procesarPago(PagoTarjetaDTO request) {
+        validarPeticionCompleta(request);
 
-        PagoTarjetaResponseDTO validacionPeticion = validarPeticionCompleta(request);
-        if (validacionPeticion != null) return validacionPeticion;
+        validarDatosPago(request);
 
-
-        PagoTarjetaResponseDTO validacionDatos = validarDatosPago(request);
-        if (validacionDatos != null) return validacionDatos;
-
-
-        Optional<Client> tiendaOpt = validarAutorizacion(request);
-        if (tiendaOpt.isEmpty()) {
-            return crearRespuestaError("Autorización no válida");
-        }
-        Client tienda = tiendaOpt.get();
-
+        Client tienda = validarAutorizacion(request);
 
         String ibanNormalizado = normalizarIban(request.destino().iban());
-        Optional<BankAccount> cuentaDestinoOpt = validarCuentaDestino(ibanNormalizado, tienda);
-        if (cuentaDestinoOpt.isEmpty()) {
-            return crearRespuestaError("Cuenta destino no encontrada o no pertenece a la tienda");
-        }
-        BankAccount cuentaDestino = cuentaDestinoOpt.get();
-
+        BankAccount cuentaDestino = validarCuentaDestino(ibanNormalizado, tienda);
 
         String numeroTarjetaNormalizado = normalizarNumeroTarjeta(request.origen().numeroTarjeta());
-        Optional<CreditCard> tarjetaOpt = validarTarjeta(numeroTarjetaNormalizado, request.origen());
-        if (tarjetaOpt.isEmpty()) {
-            return crearRespuestaError("Tarjeta no válida");
-        }
-        CreditCard tarjeta = tarjetaOpt.get();
+        CreditCard tarjeta = validarTarjeta(numeroTarjetaNormalizado, request.origen());
 
-
-        Optional<BankAccount> cuentaOrigenOpt = validarCuentaOrigen(tarjeta, request.pago().importe());
-        if (cuentaOrigenOpt.isEmpty()) {
-            return crearRespuestaError("Cuenta origen no encontrada o fondos insuficientes");
-        }
-        BankAccount cuentaOrigen = cuentaOrigenOpt.get();
-
+        BankAccount cuentaOrigen = validarCuentaOrigen(tarjeta, request.pago().importe());
 
         procesarTransferencia(cuentaOrigen, cuentaDestino, request.pago().importe());
-
 
         registrarMovimiento(tarjeta, request.pago().importe(), request.pago().concepto());
 
         return crearRespuestaExito(ibanNormalizado, request.pago().importe(), request.pago().concepto());
     }
 
-
-    private PagoTarjetaResponseDTO validarPeticionCompleta(PagoTarjetaDTO request) {
+    private void validarPeticionCompleta(PagoTarjetaDTO request) {
         if (request == null || request.autorizacion() == null || request.origen() == null
                 || request.destino() == null || request.pago() == null) {
-            return crearRespuestaError("Petición incompleta");
+            throw new ValidationException("Petición incompleta");
         }
-        return null;
     }
 
-
-    private PagoTarjetaResponseDTO validarDatosPago(PagoTarjetaDTO request) {
+    private void validarDatosPago(PagoTarjetaDTO request) {
         if (!esImporteValido(request.pago().importe())) {
-            return crearRespuestaError("Importe debe ser positivo");
+            throw new ValidationException("Importe debe ser positivo");
         }
         if (!esConceptoValido(request.pago().concepto())) {
-            return crearRespuestaError("Concepto debe tener al menos 3 caracteres");
+            throw new ValidationException("Concepto debe tener al menos 3 caracteres");
         }
         if (!esIbanValido(request.destino().iban())) {
-            return crearRespuestaError("IBAN inválido o no empieza por ES");
+            throw new ValidationException("IBAN inválido o no empieza por ES");
         }
-        return null;
     }
 
-
-    private Optional<Client> validarAutorizacion(PagoTarjetaDTO request) {
+    private Client validarAutorizacion(PagoTarjetaDTO request) {
         Optional<Client> tiendaOpt = clientService.findByUsername(request.autorizacion().login());
         if (tiendaOpt.isEmpty()) {
-            return Optional.empty();
+            throw new ValidationException("Autorización no válida");
         }
-
-        Client tienda = tiendaOpt.get();
-        if (!request.autorizacion().api_token().equals(tienda.getApi_token())) {
-            return Optional.empty();
-        }
-
-        return tiendaOpt;
+        return tiendaOpt.get();
     }
 
-
-    private Optional<BankAccount> validarCuentaDestino(String iban, Client tienda) {
+    private BankAccount validarCuentaDestino(String iban, Client tienda) {
         Optional<BankAccount> cuentaDestinoOpt = bankAccountService.findByIBAN(iban);
         if (cuentaDestinoOpt.isEmpty()) {
-            return Optional.empty();
+            throw new ValidationException("Cuenta destino no encontrada");
         }
 
         BankAccount cuentaDestino = cuentaDestinoOpt.get();
         if (cuentaDestino.getIdCliente() == null || !cuentaDestino.getIdCliente().equals(tienda.getId())) {
-            return Optional.empty();
+            throw new ValidationException("Cuenta destino no pertenece a la tienda");
         }
 
-        return cuentaDestinoOpt;
+        return cuentaDestino;
     }
 
-
-    private Optional<CreditCard> validarTarjeta(String numeroTarjeta, PagoTarjetaDTO.OrigenDTO origen) {
+    private CreditCard validarTarjeta(String numeroTarjeta, PagoTarjetaDTO.OrigenDTO origen) {
         Optional<CreditCard> tarjetaOpt = creditCardService.findByCardNumber(numeroTarjeta);
         if (tarjetaOpt.isEmpty()) {
-            return Optional.empty();
+            throw new ValidationException("Tarjeta no encontrada");
         }
 
         CreditCard tarjeta = tarjetaOpt.get();
         if (!coincideTarjeta(tarjeta, origen)) {
-            return Optional.empty();
+            throw new ValidationException("Datos de la tarjeta no coinciden");
         }
 
         if (!tarjetaVigente(tarjeta.getFechaCaducidad())) {
-            return Optional.empty();
+            throw new ValidationException("Tarjeta caducada");
         }
 
-        return tarjetaOpt;
+        return tarjeta;
     }
 
-
-    private Optional<BankAccount> validarCuentaOrigen(CreditCard tarjeta, BigDecimal importe) {
+    private BankAccount validarCuentaOrigen(CreditCard tarjeta, BigDecimal importe) {
         if (tarjeta.getIdCuentaBancaria() == null) {
-            return Optional.empty();
+            throw new ValidationException("La tarjeta no tiene cuenta asociada");
         }
 
         Optional<BankAccount> cuentaOrigenOpt = bankAccountService.findById(tarjeta.getIdCuentaBancaria());
         if (cuentaOrigenOpt.isEmpty()) {
-            return Optional.empty();
+            throw new ValidationException("Cuenta origen no encontrada");
         }
 
         BankAccount cuentaOrigen = cuentaOrigenOpt.get();
         if (cuentaOrigen.getSaldo() == null || cuentaOrigen.getSaldo().compareTo(importe) < 0) {
-            return Optional.empty();
+            throw new ValidationException("Fondos insuficientes");
         }
 
-        return cuentaOrigenOpt;
+        return cuentaOrigen;
     }
 
     private void procesarTransferencia(BankAccount cuentaOrigen, BankAccount cuentaDestino, BigDecimal importe) {
@@ -195,9 +156,6 @@ public class PagoTarjetaServiceImpl implements PagoTarjetaService {
     }
 
 
-    private PagoTarjetaResponseDTO crearRespuestaError(String mensaje) {
-        return new PagoTarjetaResponseDTO(null, null, null, mensaje, false);
-    }
 
     private PagoTarjetaResponseDTO crearRespuestaExito(String iban, BigDecimal importe, String concepto) {
         return new PagoTarjetaResponseDTO(iban, importe, concepto, "Pago aceptado", true);
