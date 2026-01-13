@@ -74,8 +74,8 @@ public class BankController {
     }
 
 
-    @GetMapping("/clientes/{clientId}/tarjetas")
-    public ResponseEntity<List<CreditCard>> getTarjetasByCliente(@PathVariable Long clientId,
+    @GetMapping("/cuentas/{accountId}/tarjetas")
+    public ResponseEntity<List<CreditCard>> getTarjetasByCuenta(@PathVariable Long accountId,
                                                                  @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
         String token = extractTokenFromHeader(authHeader);
@@ -84,20 +84,19 @@ public class BankController {
         Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
 
-        if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
+        Optional<BankAccount> cuentaOpt = bankAccountService.findById(accountId);
+        if (cuentaOpt.isEmpty()) return ResponseEntity.status(404).build();
 
-        List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
+        if (!cuentaOpt.get().getIdCliente().equals(userOpt.get().getId())) {
+            return ResponseEntity.status(403).build();
+        }
 
-
-        List<CreditCard> tarjetas = cuentas.stream()
-            .flatMap(cuenta -> creditCardService.findByBankAccountId(cuenta.getId()).stream())
-            .toList();
-
+        List<CreditCard> tarjetas = creditCardService.findByBankAccountId(accountId);
         return ResponseEntity.ok(tarjetas);
     }
 
-    @GetMapping("/clientes/{clientId}/movimientos")
-    public ResponseEntity<List<BankMovement>> getMovimientosByCliente(@PathVariable Long clientId,
+    @GetMapping("/cuentas/{accountId}/movimientos")
+    public ResponseEntity<List<BankMovement>> getMovimientosByCuenta(@PathVariable Long accountId,
                                                                      @RequestHeader(value = "Authorization", required = false) String authHeader) {
         String token = extractTokenFromHeader(authHeader);
         if (token == null) return ResponseEntity.status(401).build();
@@ -105,13 +104,14 @@ public class BankController {
         Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
 
-        if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
+        Optional<BankAccount> cuentaOpt = bankAccountService.findById(accountId);
+        if (cuentaOpt.isEmpty()) return ResponseEntity.status(404).build();
 
-        List<BankAccount> cuentas = bankAccountService.findByClientId(clientId);
+        if (!cuentaOpt.get().getIdCliente().equals(userOpt.get().getId())) {
+            return ResponseEntity.status(403).build();
+        }
 
-        List<CreditCard> tarjetas = cuentas.stream()
-            .flatMap(cuenta -> creditCardService.findByBankAccountId(cuenta.getId()).stream())
-            .toList();
+        List<CreditCard> tarjetas = creditCardService.findByBankAccountId(accountId);
 
         List<BankMovement> movimientos = tarjetas.stream()
             .flatMap(tarjeta -> bankMovementService.findAllByCreditCardId(tarjeta.getId()).stream())
