@@ -6,6 +6,7 @@ import org.example.bankback.controller.webmodel.response.PagoTarjetaResponse;
 import org.example.bankback.domain.exception.ValidationException;
 import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.BankMovement;
+import org.example.bankback.domain.models.Client;
 import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.models.dto.PagoTarjetaDTO;
 import org.example.bankback.domain.models.dto.PagoTarjetaResponseDTO;
@@ -64,7 +65,7 @@ public class BankController {
         String token = extractTokenFromHeader(authHeader);
         if (token == null) return ResponseEntity.status(401).build();
 
-        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        Optional<Client> userOpt = authService.getUserFromToken(token);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
 
         if (!userOpt.get().getId().equals(clientId)) return ResponseEntity.status(403).build();
@@ -81,7 +82,7 @@ public class BankController {
         String token = extractTokenFromHeader(authHeader);
         if (token == null) return ResponseEntity.status(401).build();
 
-        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        Optional<Client> userOpt = authService.getUserFromToken(token);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
 
         Optional<BankAccount> cuentaOpt = bankAccountService.findById(accountId);
@@ -101,7 +102,7 @@ public class BankController {
         String token = extractTokenFromHeader(authHeader);
         if (token == null) return ResponseEntity.status(401).build();
 
-        Optional<org.example.bankback.domain.models.Client> userOpt = authService.getUserFromToken(token);
+        Optional<Client> userOpt = authService.getUserFromToken(token);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).build();
 
         Optional<BankAccount> cuentaOpt = bankAccountService.findById(accountId);
