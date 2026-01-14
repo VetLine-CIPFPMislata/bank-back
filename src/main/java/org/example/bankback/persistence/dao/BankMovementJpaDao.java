@@ -13,4 +13,5 @@ public interface BankMovementJpaDao {
     Optional<BankMovement> findByDate(Date date);
     BankMovement save(BankMovement bankMovement);
     List<BankMovement> findAllByCreditCardId(Long creditCardId);
+    List<BankMovement> findAllByBankAccountId(Long bankAccountId);
 }

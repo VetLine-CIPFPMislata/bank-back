@@ -112,11 +112,7 @@ public class BankController {
             return ResponseEntity.status(403).build();
         }
 
-        List<CreditCard> tarjetas = creditCardService.findByBankAccountId(accountId);
-
-        List<BankMovement> movimientos = tarjetas.stream()
-            .flatMap(tarjeta -> bankMovementService.findAllByCreditCardId(tarjeta.getId()).stream())
-            .toList();
+        List<BankMovement> movimientos = bankMovementService.findAllByBankAccountId(accountId);
 
         return ResponseEntity.ok(movimientos);
     }

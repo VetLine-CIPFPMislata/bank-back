@@ -42,4 +42,9 @@ public class BankMovementServiceImpl implements BankMovementService {
     public List<BankMovement> findAllByCreditCardId(Long creditCardId) {
         return bankMovementRepository.findAllByCreditCardId(creditCardId);
     }
+
+    @Override
+    public List<BankMovement> findAllByBankAccountId(Long bankAccountId) {
+        return bankMovementRepository.findAllByBankAccountId(bankAccountId);
+    }
 }

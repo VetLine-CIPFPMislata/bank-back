@@ -82,4 +82,17 @@ public class BankMovementJpaDaoImpl implements BankMovementJpaDao {
                 .map(MapperPersistence.getInstance()::fromBankMovementJpaEntityToBankMovement)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BankMovement> findAllByBankAccountId(Long bankAccountId) {
+        TypedQuery<BankMovementJpaEntity> query = entityManager.createQuery(
+                "SELECT b FROM BankMovementJpaEntity b WHERE b.cuentaBancaria.id = :bankAccountId",
+                BankMovementJpaEntity.class
+        );
+        query.setParameter("bankAccountId", bankAccountId);
+
+        return query.getResultList().stream()
+                .map(MapperPersistence.getInstance()::fromBankMovementJpaEntityToBankMovement)
+                .collect(Collectors.toList());
+    }
 }
