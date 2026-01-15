@@ -88,11 +88,11 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConExito() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any())).thenReturn(successResponseDTO);
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -106,10 +106,10 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConApiTokenInvalido() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(false);
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -118,7 +118,7 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConIbanInvalido() throws Exception {
-        // Given
+        
         PagoTarjetaRequest invalidRequest = new PagoTarjetaRequest(
                 new AutorizacionRequest("juan", "5f5ca67f-4c02-47cf-8753-a7790f7f5be1"),
                 new OrigenRequest("4111111111111111", "2027-12", "123", "JUAN GARCIA GARCIA"),
@@ -128,9 +128,9 @@ class BankControllerPagoTarjetaTest {
 
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
-                .thenThrow(new ValidationException("IBAN inválido o no empieza por ES"));
+                .thenThrow(new ValidationException("IBAN invÃ¡lido o no empieza por ES"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(invalidRequest)))
@@ -139,7 +139,7 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConImporteNegativo() throws Exception {
-        // Given
+        
         PagoTarjetaRequest invalidRequest = new PagoTarjetaRequest(
                 new AutorizacionRequest("juan", "5f5ca67f-4c02-47cf-8753-a7790f7f5be1"),
                 new OrigenRequest("4111111111111111", "2027-12", "123", "JUAN GARCIA GARCIA"),
@@ -151,7 +151,7 @@ class BankControllerPagoTarjetaTest {
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Importe debe ser positivo"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(invalidRequest)))
@@ -160,7 +160,7 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConConceptoCorto() throws Exception {
-        // Given
+        
         PagoTarjetaRequest invalidRequest = new PagoTarjetaRequest(
                 new AutorizacionRequest("juan", "5f5ca67f-4c02-47cf-8753-a7790f7f5be1"),
                 new OrigenRequest("4111111111111111", "2027-12", "123", "JUAN GARCIA GARCIA"),
@@ -172,7 +172,7 @@ class BankControllerPagoTarjetaTest {
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Concepto debe tener al menos 3 caracteres"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(invalidRequest)))
@@ -181,12 +181,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConAutorizacionInvalida() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
-                .thenThrow(new ValidationException("Autorización no válida"));
+                .thenThrow(new ValidationException("AutorizaciÃ³n no vÃ¡lida"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -195,12 +195,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConDatosIncoherentes() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Datos de la tarjeta no coinciden"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -209,12 +209,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConFondosInsuficientes() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Fondos insuficientes"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -223,12 +223,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConTarjetaCaducada() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Tarjeta caducada"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -237,12 +237,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConTarjetaNoEncontrada() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Tarjeta no encontrada"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -251,12 +251,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConCuentaDestinoNoEncontrada() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Cuenta destino no encontrada"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -265,12 +265,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConPeticionIncompleta() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
-                .thenThrow(new ValidationException("Petición incompleta"));
+                .thenThrow(new ValidationException("PeticiÃ³n incompleta"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -279,12 +279,12 @@ class BankControllerPagoTarjetaTest {
 
     @Test
     void testPagoTarjetaConCuentaNoPerteneceTienda() throws Exception {
-        // Given
+        
         when(bankApiTokenService.validateApiToken(anyString())).thenReturn(true);
         when(pagoTarjetaService.procesarPago(any()))
                 .thenThrow(new ValidationException("Cuenta destino no pertenece a la tienda"));
 
-        // When/Then
+        
         mockMvc.perform(post("/api/pago_tarjeta")
                         .contentType("application/json")
                         .content(toJson(validRequest)))
@@ -324,4 +324,5 @@ class BankControllerPagoTarjetaTest {
         }
     }
 }
+
 

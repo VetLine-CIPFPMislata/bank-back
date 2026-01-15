@@ -65,14 +65,14 @@ class BankControllerTarjetasTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
 
-        // Cliente válido
-        validClient = new Client(1L, "juan", "password123", "Juan", "García", "López", "12345678A");
+        
+        validClient = new Client(1L, "juan", "password123", "Juan", "GarcÃ­a", "LÃ³pez", "12345678A");
 
-        // Cuenta bancaria del cliente
+        
         cuentaDelCliente = new BankAccount(1L, "ES6112343456420456325555", new BigDecimal("1000.00"));
         cuentaDelCliente.setIdCliente(1L);
 
-        // Tarjetas de la cuenta
+        
         CreditCard tarjeta1 = new CreditCard(1L, "4111111111111111", "2027-12", "123", "JUAN GARCIA");
         tarjeta1.setIdCuentaBancaria(1L);
 
@@ -84,13 +84,13 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_Exitoso() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(creditCardService.findByBankAccountId(1L)).thenReturn(tarjetas);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -104,18 +104,18 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_SinAuthorizationHeader() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void testGetTarjetasByCuenta_TokenInvalido() throws Exception {
-        // Given
+        
         String invalidToken = "invalid-token";
         when(authService.getUserFromToken(invalidToken)).thenReturn(Optional.empty());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas")
                         .header("Authorization", "Bearer " + invalidToken))
                 .andExpect(status().isUnauthorized());
@@ -123,12 +123,12 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_CuentaNoExiste() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(999L)).thenReturn(Optional.empty());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/999/tarjetas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isNotFound());
@@ -136,15 +136,15 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_CuentaNoPertenecAlUsuario() throws Exception {
-        // Given - Cuenta pertenece a otro cliente
+        
         String validToken = "valid-token-123";
         BankAccount cuentaOtroCliente = new BankAccount(2L, "ES6112343456420456325556", new BigDecimal("2000.00"));
-        cuentaOtroCliente.setIdCliente(2L); // Cliente diferente
+        cuentaOtroCliente.setIdCliente(2L); 
 
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(2L)).thenReturn(Optional.of(cuentaOtroCliente));
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/2/tarjetas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isForbidden());
@@ -152,13 +152,13 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_CuentaSinTarjetas() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(creditCardService.findByBankAccountId(1L)).thenReturn(List.of());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -168,7 +168,7 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_ConMultiplesTarjetas() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         CreditCard tarjeta3 = new CreditCard(3L, "4333333333333333", "2029-03", "789", "JUAN GARCIA");
         tarjeta3.setIdCuentaBancaria(1L);
@@ -183,7 +183,7 @@ class BankControllerTarjetasTest {
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(creditCardService.findByBankAccountId(1L)).thenReturn(muchasTarjetas);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -193,10 +193,11 @@ class BankControllerTarjetasTest {
 
     @Test
     void testGetTarjetasByCuenta_AuthorizationHeaderVacio() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/tarjetas")
                         .header("Authorization", ""))
                 .andExpect(status().isUnauthorized());
     }
 }
+
 

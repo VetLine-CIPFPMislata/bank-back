@@ -72,18 +72,18 @@ class BankControllerMovimientosTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
 
-        // Cliente válido
-        validClient = new Client(1L, "juan", "password123", "Juan", "García", "López", "12345678A");
+        
+        validClient = new Client(1L, "juan", "password123", "Juan", "GarcÃ­a", "LÃ³pez", "12345678A");
 
-        // Cuenta bancaria del cliente
+        
         cuentaDelCliente = new BankAccount(1L, "ES6112343456420456325555", new BigDecimal("1000.00"));
         cuentaDelCliente.setIdCliente(1L);
 
-        // Tarjeta de crédito
+        
         tarjeta = new CreditCard(1L, "4111111111111111", "2027-12", "123", "JUAN GARCIA");
         tarjeta.setIdCuentaBancaria(1L);
 
-        // Movimientos bancarios
+        
         BankMovement movimiento1 = new BankMovement(
                 1L,
                 DEBE,
@@ -101,7 +101,7 @@ class BankControllerMovimientosTest {
                 null,
                 new Date(),
                 new BigDecimal("200.00"),
-                "Ingreso nómina"
+                "Ingreso nÃ³mina"
         );
 
         BankMovement movimiento3 = new BankMovement(
@@ -119,13 +119,13 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_Exitoso() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(bankMovementService.findAllByBankAccountId(1L)).thenReturn(movimientos);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -143,18 +143,18 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_SinAuthorizationHeader() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void testGetMovimientosByCuenta_TokenInvalido() throws Exception {
-        // Given
+        
         String invalidToken = "invalid-token";
         when(authService.getUserFromToken(invalidToken)).thenReturn(Optional.empty());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "Bearer " + invalidToken))
                 .andExpect(status().isUnauthorized());
@@ -162,12 +162,12 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_CuentaNoExiste() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(999L)).thenReturn(Optional.empty());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/999/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isNotFound());
@@ -175,15 +175,15 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_CuentaNoPertenecAlUsuario() throws Exception {
-        // Given - Cuenta pertenece a otro cliente
+        
         String validToken = "valid-token-123";
         BankAccount cuentaOtroCliente = new BankAccount(2L, "ES6112343456420456325556", new BigDecimal("2000.00"));
-        cuentaOtroCliente.setIdCliente(2L); // Cliente diferente
+        cuentaOtroCliente.setIdCliente(2L); 
 
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(2L)).thenReturn(Optional.of(cuentaOtroCliente));
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/2/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isForbidden());
@@ -191,13 +191,13 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_CuentaSinMovimientos() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(bankMovementService.findAllByBankAccountId(1L)).thenReturn(List.of());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -207,7 +207,7 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_ConMuchosMovimientos() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         BankMovement movimiento4 = new BankMovement(
                 4L,
@@ -226,7 +226,7 @@ class BankControllerMovimientosTest {
                 null,
                 new Date(),
                 new BigDecimal("500.00"),
-                "Devolución"
+                "DevoluciÃ³n"
         );
 
         List<BankMovement> muchosMovimientos = Arrays.asList(
@@ -241,7 +241,7 @@ class BankControllerMovimientosTest {
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(bankMovementService.findAllByBankAccountId(1L)).thenReturn(muchosMovimientos);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -251,7 +251,7 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_AuthorizationHeaderSinBearer() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "invalid-format"))
                 .andExpect(status().isUnauthorized());
@@ -259,7 +259,7 @@ class BankControllerMovimientosTest {
 
     @Test
     void testGetMovimientosByCuenta_SoloMovimientosDebe() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         List<BankMovement> soloDebes = Arrays.asList(movimientos.get(0), movimientos.get(2));
 
@@ -267,7 +267,7 @@ class BankControllerMovimientosTest {
         when(bankAccountService.findById(1L)).thenReturn(Optional.of(cuentaDelCliente));
         when(bankMovementService.findAllByBankAccountId(1L)).thenReturn(soloDebes);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/cuentas/1/movimientos")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -277,4 +277,5 @@ class BankControllerMovimientosTest {
                 .andExpect(jsonPath("$[1].tipoMovimientoBancario").value("DEBE"));
     }
 }
+
 

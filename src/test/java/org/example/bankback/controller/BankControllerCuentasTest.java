@@ -63,10 +63,10 @@ class BankControllerCuentasTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
 
-        // Cliente válido
-        validClient = new Client(1L, "juan", "password123", "Juan", "García", "López", "12345678A");
+        
+        validClient = new Client(1L, "juan", "password123", "Juan", "GarcÃ­a", "LÃ³pez", "12345678A");
 
-        // Cuentas del cliente
+        
         BankAccount cuenta1 = new BankAccount(1L, "ES6112343456420456325555", new BigDecimal("1000.00"));
         cuenta1.setIdCliente(1L);
 
@@ -78,12 +78,12 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_Exitoso() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findByClientId(1L)).thenReturn(cuentas);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -97,14 +97,14 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_SinAuthorizationHeader() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void testGetCuentasByCliente_AuthorizationHeaderSinBearer() throws Exception {
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas")
                         .header("Authorization", "invalid-format"))
                 .andExpect(status().isUnauthorized());
@@ -112,11 +112,11 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_TokenInvalido() throws Exception {
-        // Given
+        
         String invalidToken = "invalid-token";
         when(authService.getUserFromToken(invalidToken)).thenReturn(Optional.empty());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas")
                         .header("Authorization", "Bearer " + invalidToken))
                 .andExpect(status().isUnauthorized());
@@ -124,11 +124,11 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_UsuarioIntentaAccederACuentasDeOtroCliente() throws Exception {
-        // Given - Usuario con ID 1 intenta acceder a cuentas del cliente 2
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
 
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/2/cuentas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isForbidden());
@@ -136,12 +136,12 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_ClienteSinCuentas() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findByClientId(1L)).thenReturn(List.of());
 
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ class BankControllerCuentasTest {
 
     @Test
     void testGetCuentasByCliente_ConMultiplesCuentas() throws Exception {
-        // Given
+        
         String validToken = "valid-token-123";
         BankAccount cuenta3 = new BankAccount(3L, "ES6112343456420456325557", new BigDecimal("2500.00"));
         cuenta3.setIdCliente(1L);
@@ -165,7 +165,7 @@ class BankControllerCuentasTest {
         when(authService.getUserFromToken(validToken)).thenReturn(Optional.of(validClient));
         when(bankAccountService.findByClientId(1L)).thenReturn(muchasCuentas);
 
-        // When/Then
+        
         mockMvc.perform(get("/api/clientes/1/cuentas")
                         .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk())
@@ -173,4 +173,5 @@ class BankControllerCuentasTest {
                 .andExpect(jsonPath("$.length()").value(3));
     }
 }
+
 
