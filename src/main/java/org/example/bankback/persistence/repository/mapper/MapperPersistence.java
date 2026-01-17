@@ -57,6 +57,7 @@ public class MapperPersistence {
                 bankMovementJpaEntity.getTipoMovimientoBancario(),
                 bankMovementJpaEntity.getOrigenMovimientoBancario(),
                 fromCreditCardJpaEntityToCreditCard(bankMovementJpaEntity.getTarjetaCreditoOrigen()),
+                fromBankAccountJpaEntityToBankAccount(bankMovementJpaEntity.getCuentaBancaria()),
                 bankMovementJpaEntity.getFechaMovimiento(),
                 bankMovementJpaEntity.getImporte(),
                 bankMovementJpaEntity.getConcepto()
@@ -72,7 +73,7 @@ public class MapperPersistence {
                 bankMovement.getTipoMovimientoBancario(),
                 bankMovement.getOrigenMovimientoBancario(),
                 fromCreditCardToCreditCardJpaEntity(bankMovement.getTarjetaCreditoOrigen()),
-                null, // cuentaBancaria - se puede mapear después si es necesario
+                fromBankAccountToBankAccountJpaEntity(bankMovement.getCuentaBancaria()),
                 bankMovement.getFechaMovimiento(),
                 bankMovement.getImporte(),
                 bankMovement.getConcepto()

@@ -8,15 +8,17 @@ public class BankMovement {
     TypeBankMovement tipoMovimientoBancario;
     OriginBankMovement origenMovimientoBancario;
     CreditCard tarjetaCreditoOrigen;
+    BankAccount cuentaBancaria;
     Date fechaMovimiento;
     BigDecimal importe;
     String concepto;
 
-    public BankMovement(Long id, TypeBankMovement tipoMovimientoBancario, OriginBankMovement origenMovimientoBancario, CreditCard tarjetaCreditoOrigen, Date fechaMovimiento, BigDecimal importe, String concepto) {
+    public BankMovement(Long id, TypeBankMovement tipoMovimientoBancario, OriginBankMovement origenMovimientoBancario, CreditCard tarjetaCreditoOrigen, BankAccount cuentaBancaria, Date fechaMovimiento, BigDecimal importe, String concepto) {
         this.id = id;
         this.tipoMovimientoBancario = tipoMovimientoBancario;
         this.origenMovimientoBancario = origenMovimientoBancario;
         this.tarjetaCreditoOrigen = tarjetaCreditoOrigen;
+        this.cuentaBancaria = cuentaBancaria;
         this.fechaMovimiento = fechaMovimiento;
         this.importe = importe;
         this.concepto = concepto;
@@ -71,5 +73,13 @@ public class BankMovement {
 
     public void setConcepto(String concepto) {
         this.concepto = concepto;
+    }
+
+    public BankAccount getCuentaBancaria() {
+        return cuentaBancaria;
+    }
+
+    public void setCuentaBancaria(BankAccount cuentaBancaria) {
+        this.cuentaBancaria = cuentaBancaria;
     }
 }

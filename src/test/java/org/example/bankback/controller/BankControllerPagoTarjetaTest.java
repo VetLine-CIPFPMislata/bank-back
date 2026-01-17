@@ -67,7 +67,7 @@ class BankControllerPagoTarjetaTest {
         );
 
         mockMvc = MockMvcBuilders.standaloneSetup(bankController)
-                .setControllerAdvice(new TestExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
 
         validRequest = new PagoTarjetaRequest(
@@ -310,18 +310,6 @@ class BankControllerPagoTarjetaTest {
                 r.pago().importe().toPlainString(),
                 r.pago().concepto()
         );
-    }
-
-    @org.springframework.web.bind.annotation.RestControllerAdvice
-    static class TestExceptionHandler {
-        @org.springframework.web.bind.annotation.ExceptionHandler(ValidationException.class)
-        org.springframework.http.ResponseEntity<java.util.Map<String, Object>> handleValidationException(ValidationException ex) {
-            java.util.Map<String, Object> response = new java.util.HashMap<>();
-            response.put("error", ex.getMessage());
-            response.put("status", 400);
-
-            return org.springframework.http.ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(response);
-        }
     }
 }
 

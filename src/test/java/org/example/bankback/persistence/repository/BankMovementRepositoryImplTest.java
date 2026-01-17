@@ -38,6 +38,7 @@ class BankMovementRepositoryImplTest {
                 TypeBankMovement.DEBE,
                 OriginBankMovement.TARJETA,
                 null,
+                null,
                 new Date(),
                 new BigDecimal("49.99"),
                 "Compra tienda online"
@@ -51,6 +52,7 @@ class BankMovementRepositoryImplTest {
                 2L,
                 TypeBankMovement.HABER,
                 OriginBankMovement.TRANSFERENCIA,
+                null,
                 null,
                 new Date(),
                 new BigDecimal("1200.00"),
@@ -74,15 +76,15 @@ class BankMovementRepositoryImplTest {
     void findAllByBankAccountId_ShouldReturnAllMovements_NotOnlyCard() {
         // Arrange
         BankMovement cardMovement = new BankMovement(
-                1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null,
+                1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null, null,
                 new Date(), new BigDecimal("50.00"), "Pago tarjeta"
         );
         BankMovement transferMovement = new BankMovement(
-                2L, TypeBankMovement.HABER, OriginBankMovement.TRANSFERENCIA, null,
+                2L, TypeBankMovement.HABER, OriginBankMovement.TRANSFERENCIA, null, null,
                 new Date(), new BigDecimal("100.00"), "Transferencia"
         );
         BankMovement domiciliacionMovement = new BankMovement(
-                3L, TypeBankMovement.DEBE, OriginBankMovement.DOMICILIACION, null,
+                3L, TypeBankMovement.DEBE, OriginBankMovement.DOMICILIACION, null, null,
                 new Date(), new BigDecimal("30.00"), "Recibo luz"
         );
 
@@ -120,11 +122,11 @@ class BankMovementRepositoryImplTest {
     void findAllByCreditCardId_ShouldReturnOnlyCardMovements() {
         // Arrange
         BankMovement cardMovement1 = new BankMovement(
-                1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null,
+                1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null, null,
                 new Date(), new BigDecimal("25.00"), "Compra 1"
         );
         BankMovement cardMovement2 = new BankMovement(
-                2L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null,
+                2L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA, null, null,
                 new Date(), new BigDecimal("35.00"), "Compra 2"
         );
 

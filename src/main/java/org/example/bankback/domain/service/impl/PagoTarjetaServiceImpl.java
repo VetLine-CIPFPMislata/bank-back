@@ -7,6 +7,8 @@ import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.Client;
 import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.models.BankMovement;
+import org.example.bankback.domain.models.TypeBankMovement;
+import org.example.bankback.domain.models.OriginBankMovement;
 import org.example.bankback.domain.service.*;
 
 
@@ -56,7 +58,7 @@ public class PagoTarjetaServiceImpl implements PagoTarjetaService {
 
         procesarTransferencia(cuentaOrigen, cuentaDestino, request.pago().importe());
 
-        registrarMovimiento(tarjeta, request.pago().importe(), request.pago().concepto());
+        registrarMovimientos(tarjeta, cuentaOrigen, cuentaDestino, request.pago().importe(), request.pago().concepto());
 
         return crearRespuestaExito(ibanNormalizado, request.pago().importe(), request.pago().concepto());
     }
@@ -150,9 +152,14 @@ public class PagoTarjetaServiceImpl implements PagoTarjetaService {
     }
 
 
-    private void registrarMovimiento(CreditCard tarjeta, BigDecimal importe, String concepto) {
-        BankMovement movimiento = crearMovimientoPago(tarjeta, importe, concepto);
-        bankMovementService.save(movimiento);
+    private void registrarMovimientos(CreditCard tarjeta, BankAccount cuentaOrigen, BankAccount cuentaDestino, BigDecimal importe, String concepto) {
+        // Movimiento de débito en cuenta origen (con tarjeta)
+        BankMovement movimientoDebe = crearMovimientoPago(tarjeta, cuentaOrigen, importe, concepto);
+        bankMovementService.save(movimientoDebe);
+
+        // Movimiento de ingreso en cuenta destino (sin tarjeta, solo cuenta)
+        BankMovement movimientoHaber = crearMovimientoIngreso(cuentaDestino, importe, concepto);
+        bankMovementService.save(movimientoHaber);
     }
 
 
@@ -205,16 +212,29 @@ public class PagoTarjetaServiceImpl implements PagoTarjetaService {
         }
     }
 
-    private BankMovement crearMovimientoPago(CreditCard tarjeta, BigDecimal importe, String concepto) {
-        BankMovement movimiento = new BankMovement(
+    private BankMovement crearMovimientoPago(CreditCard tarjeta, BankAccount cuenta, BigDecimal importe, String concepto) {
+        return new BankMovement(
                 null,
                 DEBE,
                 TARJETA,
                 tarjeta,
+                cuenta,
                 new Date(),
                 importe,
                 concepto
         );
-        return movimiento;
+    }
+
+    private BankMovement crearMovimientoIngreso(BankAccount cuentaDestino, BigDecimal importe, String concepto) {
+        return new BankMovement(
+                null,
+                TypeBankMovement.HABER,
+                OriginBankMovement.TRANSFERENCIA,
+                null, // Sin tarjeta, es un ingreso por transferencia
+                cuentaDestino,
+                new Date(),
+                importe,
+                concepto
+        );
     }
 }

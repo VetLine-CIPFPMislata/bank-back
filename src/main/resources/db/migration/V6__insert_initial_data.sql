@@ -24,10 +24,10 @@ INSERT INTO credit_cards (card_number, expiry_date, cvc, full_name, bank_account
 ('4916234506082832', '2028-03', '189', 'Antonio Garcia Rodríguez', 5),
 ('4024007134564321', '2025-09', '321', 'Antonio García Rodríguez', 6);
 
--- Insertar movimientos bancarios de ejemplo (mínimo 30 por cuenta)
+-- Insertar movimientos bancarios de ejemplo
 INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank_account_id, movement_date, amount, concept) VALUES
 
--- Cuenta 1 (bank_account_id = 1) - 30 movimientos
+-- Cuenta 1 (bank_account_id = 1)
 ('DEBE', 'TARJETA', 1, 1, '2026-01-01 08:10:00', 23.50, 'Desayuno cafetería'),
 ('DEBE', 'TARJETA', 1, 1, '2026-01-02 12:30:00', 45.99, 'Compra supermercado'),
 ('DEBE', 'DOMICILIACION', NULL, 1, '2026-01-03 09:00:00', 60.00, 'Seguro hogar'),
@@ -45,21 +45,8 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('DEBE', 'DOMICILIACION', NULL, 1, '2026-01-15 07:00:00', 12.00, 'Servicio streaming'),
 ('HABER', 'TRANSFERENCIA', NULL, 1, '2026-01-16 10:00:00', 75.00, 'Pago recibido'),
 ('DEBE', 'TARJETA', 1, 1, '2026-01-17 13:40:00', 9.99, 'App compra'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-18 21:15:00', 59.90, 'Ropa'),
-('DEBE', 'DOMICILIACION', NULL, 1, '2026-01-19 06:50:00', 48.30, 'Agua'),
-('HABER', 'TRANSFERENCIA', NULL, 1, '2026-01-20 09:30:00', 300.00, 'Devolución'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-21 17:05:00', 22.00, 'Librería'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-22 12:45:00', 39.50, 'Mercado'),
-('DEBE', 'DOMICILIACION', NULL, 1, '2026-01-23 08:30:00', 25.00, 'Mantenimiento coche'),
-('HABER', 'TRANSFERENCIA', NULL, 1, '2026-01-24 09:10:00', 500.00, 'Ingreso cliente'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-25 20:00:00', 110.00, 'Electrodomésticos'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-26 14:30:00', 7.25, 'Supermercado pequeño'),
-('DEBE', 'DOMICILIACION', NULL, 1, '2026-01-27 07:20:00', 10.00, 'Donación'),
-('HABER', 'TRANSFERENCIA', NULL, 1, '2026-01-28 10:50:00', 1000.00, 'Transferencia nómina'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-29 19:40:00', 14.75, 'Cafetería'),
-('DEBE', 'TARJETA', 1, 1, '2026-01-30 16:55:00', 199.99, 'Compra TV'),
 
--- Cuenta 2 (bank_account_id = 2) - 30 movimientos
+-- Cuenta 2 (bank_account_id = 2)
 ('DEBE', 'TARJETA', 2, 2, '2026-01-01 09:10:00', 12.00, 'Desayuno'),
 ('HABER', 'TRANSFERENCIA', NULL, 2, '2026-01-02 10:20:00', 250.00, 'Ingreso freelance'),
 ('DEBE', 'DOMICILIACION', NULL, 2, '2026-01-03 07:30:00', 60.00, 'Seguro coche'),
@@ -77,21 +64,8 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('HABER', 'TRANSFERENCIA', NULL, 2, '2026-01-15 09:45:00', 300.00, 'Devolución'),
 ('DEBE', 'TARJETA', 2, 2, '2026-01-16 12:20:00', 22.00, 'Supermercado'),
 ('DEBE', 'TARJETA', 2, 2, '2026-01-17 17:50:00', 14.00, 'Cafetería'),
-('DEBE', 'DOMICILIACION', NULL, 2, '2026-01-18 07:10:00', 48.30, 'Agua'),
-('HABER', 'TRANSFERENCIA', NULL, 2, '2026-01-19 09:05:00', 500.00, 'Ingreso cliente'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-20 18:00:00', 27.50, 'Perfumería'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-21 13:35:00', 8.75, 'Kiosco'),
-('DEBE', 'DOMICILIACION', NULL, 2, '2026-01-22 06:20:00', 30.00, 'Mantenimiento'),
-('HABER', 'TRANSFERENCIA', NULL, 2, '2026-01-23 10:30:00', 150.00, 'Pago recibido'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-24 20:10:00', 65.00, 'Electrónica'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-25 16:40:00', 19.95, 'Libro'),
-('DEBE', 'DOMICILIACION', NULL, 2, '2026-01-26 07:50:00', 10.00, 'Donación mensual'),
-('HABER', 'TRANSFERENCIA', NULL, 2, '2026-01-27 09:20:00', 220.00, 'Ingreso transferencia'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-28 11:55:00', 39.99, 'Zapatos'),
-('DEBE', 'TARJETA', 2, 2, '2026-01-29 19:30:00', 5.00, 'Aparcamiento'),
-('DEBE', 'DOMICILIACION', NULL, 2, '2026-01-30 08:40:00', 60.00, 'Seguro vida'),
 
--- Cuenta 3 (bank_account_id = 3) - 30 movimientos
+-- Cuenta 3 (bank_account_id = 3)
 ('DEBE', 'TARJETA', 3, 3, '2026-01-01 10:00:00', 59.90, 'Compra electrónica'),
 ('DEBE', 'TARJETA', 3, 3, '2026-01-02 14:10:00', 20.00, 'Almuerzo'),
 ('HABER', 'TRANSFERENCIA', NULL, 3, '2026-01-03 09:00:00', 1200.00, 'Ingreso empresa'),
@@ -109,21 +83,8 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('DEBE', 'DOMICILIACION', NULL, 3, '2026-01-15 07:20:00', 60.00, 'Seguro'),
 ('HABER', 'TRANSFERENCIA', NULL, 3, '2026-01-16 11:00:00', 250.00, 'Pago recibido'),
 ('DEBE', 'TARJETA', 3, 3, '2026-01-17 16:40:00', 32.50, 'Restaurante'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-18 19:20:00', 220.00, 'Electrónica'),
-('DEBE', 'DOMICILIACION', NULL, 3, '2026-01-19 08:05:00', 30.00, 'Mantenimiento'),
-('HABER', 'TRANSFERENCIA', NULL, 3, '2026-01-20 09:35:00', 500.00, 'Ingreso cliente'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-21 14:50:00', 7.99, 'Pequeña compra'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-22 12:10:00', 55.00, 'Supermercado grande'),
-('DEBE', 'DOMICILIACION', NULL, 3, '2026-01-23 06:30:00', 48.30, 'Agua mensual'),
-('HABER', 'TRANSFERENCIA', NULL, 3, '2026-01-24 10:20:00', 150.00, 'Ingreso'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-25 18:40:00', 89.00, 'Muebles'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-26 15:55:00', 11.50, 'Kiosco'),
-('DEBE', 'DOMICILIACION', NULL, 3, '2026-01-27 07:15:00', 20.00, 'Suscripción'),
-('HABER', 'TRANSFERENCIA', NULL, 3, '2026-01-28 09:45:00', 350.00, 'Pago contrato'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-29 20:25:00', 75.00, 'Ropa 2'),
-('DEBE', 'TARJETA', 3, 3, '2026-01-30 17:10:00', 29.99, 'Accesorios'),
 
--- Cuenta 4 (bank_account_id = 4) - 30 movimientos
+-- Cuenta 4 (bank_account_id = 4)
 ('DEBE', 'TARJETA', 4, 4, '2026-01-01 08:50:00', 14.75, 'Café y snacks'),
 ('DEBE', 'TARJETA', 4, 4, '2026-01-02 13:40:00', 180.00, 'Compra electrónica'),
 ('HABER', 'TRANSFERENCIA', NULL, 4, '2026-01-03 09:15:00', 500.00, 'Ingreso venta'),
@@ -141,21 +102,8 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('DEBE', 'DOMICILIACION', NULL, 4, '2026-01-15 06:40:00', 30.00, 'Mantenimiento'),
 ('HABER', 'TRANSFERENCIA', NULL, 4, '2026-01-16 10:30:00', 250.00, 'Pago recibido'),
 ('DEBE', 'TARJETA', 4, 4, '2026-01-17 18:55:00', 19.99, 'Cine y snacks'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-18 14:05:00', 22.50, 'Librería compra'),
-('DEBE', 'DOMICILIACION', NULL, 4, '2026-01-19 07:10:00', 15.00, 'Teléfono'),
-('HABER', 'TRANSFERENCIA', NULL, 4, '2026-01-20 09:00:00', 400.00, 'Ingreso servicio'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-21 13:30:00', 49.99, 'Ropa tienda'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-22 16:45:00', 5.99, 'Pequeña compra'),
-('DEBE', 'DOMICILIACION', NULL, 4, '2026-01-23 06:55:00', 60.00, 'Seguro coche'),
-('HABER', 'TRANSFERENCIA', NULL, 4, '2026-01-24 11:10:00', 150.00, 'Ingreso contrato'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-25 19:20:00', 120.00, 'Electrodomésticos'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-26 12:05:00', 7.50, 'Kiosco'),
-('DEBE', 'DOMICILIACION', NULL, 4, '2026-01-27 07:40:00', 20.00, 'Suscripción'),
-('HABER', 'TRANSFERENCIA', NULL, 4, '2026-01-28 09:50:00', 600.00, 'Ingreso venta 2'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-29 17:35:00', 180.00, 'Compra electrónica 2'),
-('DEBE', 'TARJETA', 4, 4, '2026-01-30 20:45:00', 34.20, 'Gasolinera'),
 
--- Cuenta 5 (bank_account_id = 5) - 30 movimientos
+-- Cuenta 5 (bank_account_id = 5)
 ('DEBE', 'TARJETA', 5, 5, '2026-01-01 09:30:00', 220.00, 'Compra electrodomésticos'),
 ('DEBE', 'TARJETA', 5, 5, '2026-01-02 18:00:00', 15.60, 'Tienda local'),
 ('HABER', 'TRANSFERENCIA', NULL, 5, '2026-01-03 09:20:00', 300.00, 'Ingreso venta'),
@@ -173,21 +121,8 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('DEBE', 'DOMICILIACION', NULL, 5, '2026-01-15 06:55:00', 10.00, 'Donación'),
 ('HABER', 'TRANSFERENCIA', NULL, 5, '2026-01-16 11:20:00', 400.00, 'Pago recibido'),
 ('DEBE', 'TARJETA', 5, 5, '2026-01-17 17:35:00', 75.00, 'Ropa 3'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-18 12:00:00', 48.30, 'Agua pago'),
-('DEBE', 'DOMICILIACION', NULL, 5, '2026-01-19 07:10:00', 60.00, 'Seguro coche'),
-('HABER', 'TRANSFERENCIA', NULL, 5, '2026-01-20 09:40:00', 150.00, 'Ingreso contrato'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-21 13:05:00', 29.99, 'Accesorios'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-22 18:25:00', 11.50, 'Kiosco'),
-('DEBE', 'DOMICILIACION', NULL, 5, '2026-01-23 06:45:00', 20.00, 'Suscripción mensual'),
-('HABER', 'TRANSFERENCIA', NULL, 5, '2026-01-24 10:55:00', 500.00, 'Transferencia recibida'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-25 19:15:00', 15.60, 'Pequeña compra'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-26 16:40:00', 220.00, 'Compra 2 electro'),
-('DEBE', 'DOMICILIACION', NULL, 5, '2026-01-27 07:30:00', 48.30, 'Agua 2'),
-('HABER', 'TRANSFERENCIA', NULL, 5, '2026-01-28 09:05:00', 300.00, 'Reembolso 2'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-29 21:00:00', 15.60, 'Tienda local 2'),
-('DEBE', 'TARJETA', 5, 5, '2026-01-30 12:20:00', 39.99, 'Zapatos 2'),
 
--- Cuenta 6 (bank_account_id = 6) - 30 movimientos
+-- Cuenta 6 (bank_account_id = 6)
 ('DEBE', 'TARJETA', 6, 6, '2026-01-01 11:15:00', 9.99, 'Suscripción streaming'),
 ('HABER', 'TRANSFERENCIA', NULL, 6, '2026-01-02 09:45:00', 300.00, 'Devolución'),
 ('DEBE', 'DOMICILIACION', NULL, 6, '2026-01-03 07:05:00', 48.30, 'Agua'),
@@ -204,17 +139,4 @@ INSERT INTO bank_movements (movement_type, origin_movement, credit_card_id, bank
 ('DEBE', 'DOMICILIACION', NULL, 6, '2026-01-14 06:20:00', 10.00, 'Donación'),
 ('HABER', 'TRANSFERENCIA', NULL, 6, '2026-01-15 11:00:00', 400.00, 'Pago recibido'),
 ('DEBE', 'TARJETA', 6, 6, '2026-01-16 14:55:00', 32.50, 'Restaurante'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-17 17:15:00', 11.50, 'Kiosco'),
-('DEBE', 'DOMICILIACION', NULL, 6, '2026-01-18 07:45:00', 48.30, 'Agua mensual'),
-('HABER', 'TRANSFERENCIA', NULL, 6, '2026-01-19 09:35:00', 500.00, 'Ingreso servicio'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-20 18:20:00', 29.99, 'Accesorios'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-21 12:10:00', 5.50, 'Café compra'),
-('DEBE', 'DOMICILIACION', NULL, 6, '2026-01-22 06:50:00', 60.00, 'Seguro coche'),
-('HABER', 'TRANSFERENCIA', NULL, 6, '2026-01-23 10:05:00', 150.00, 'Transferencia recibida'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-24 19:40:00', 75.00, 'Ropa compra 2'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-25 16:30:00', 39.99, 'Zapatos'),
-('DEBE', 'DOMICILIACION', NULL, 6, '2026-01-26 07:15:00', 20.00, 'Suscripción anual'),
-('HABER', 'TRANSFERENCIA', NULL, 6, '2026-01-27 09:55:00', 300.00, 'Reembolso'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-28 21:20:00', 15.60, 'Tienda local'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-29 13:45:00', 199.99, 'Compra grande'),
-('DEBE', 'TARJETA', 6, 6, '2026-01-30 10:30:00', 4.99, 'Pequeña compra');
+('DEBE', 'TARJETA', 6, 6, '2026-01-17 17:15:00', 11.50, 'Kiosco');

@@ -297,6 +297,7 @@ class MapperPersistenceTest {
                 TypeBankMovement.DEBE,
                 OriginBankMovement.DOMICILIACION,
                 null,
+                null,
                 movementDate,
                 new BigDecimal("60.00"),
                 "Recibo luz"
