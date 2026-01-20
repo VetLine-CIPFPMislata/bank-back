@@ -73,7 +73,7 @@ class BankControllerMovimientosTest {
         mockMvc = MockMvcBuilders.standaloneSetup(bankController).build();
 
         
-        validClient = new Client(1L, "juan", "password123", "Juan", "GarcÃ­a", "LÃ³pez", "12345678A");
+        validClient = new Client(1L, "juan", "password123", "Juan", "García", "López", "12345678A");
 
         
         cuentaDelCliente = new BankAccount(1L, "ES6112343456420456325555", new BigDecimal("1000.00"));
@@ -89,6 +89,7 @@ class BankControllerMovimientosTest {
                 DEBE,
                 TARJETA,
                 tarjeta,
+                cuentaDelCliente,
                 new Date(),
                 new BigDecimal("50.00"),
                 "Compra en tienda"
@@ -99,9 +100,10 @@ class BankControllerMovimientosTest {
                 HABER,
                 TRANSFERENCIA,
                 null,
+                cuentaDelCliente,
                 new Date(),
                 new BigDecimal("200.00"),
-                "Ingreso nÃ³mina"
+                "Ingreso nómina"
         );
 
         BankMovement movimiento3 = new BankMovement(
@@ -109,6 +111,7 @@ class BankControllerMovimientosTest {
                 DEBE,
                 TARJETA,
                 tarjeta,
+                cuentaDelCliente,
                 new Date(),
                 new BigDecimal("30.50"),
                 "Compra online"
@@ -214,6 +217,7 @@ class BankControllerMovimientosTest {
                 DEBE,
                 TRANSFERENCIA,
                 null,
+                cuentaDelCliente,
                 new Date(),
                 new BigDecimal("100.00"),
                 "Pago recibo luz"
@@ -224,9 +228,10 @@ class BankControllerMovimientosTest {
                 HABER,
                 TRANSFERENCIA,
                 null,
+                cuentaDelCliente,
                 new Date(),
                 new BigDecimal("500.00"),
-                "DevoluciÃ³n"
+                "Devolución"
         );
 
         List<BankMovement> muchosMovimientos = Arrays.asList(
@@ -277,5 +282,3 @@ class BankControllerMovimientosTest {
                 .andExpect(jsonPath("$[1].tipoMovimientoBancario").value("DEBE"));
     }
 }
-
-

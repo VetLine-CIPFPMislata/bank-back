@@ -1,5 +1,6 @@
 package org.example.bankback.persistence.dao.impl;
 
+import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.BankMovement;
 import org.example.bankback.domain.models.TypeBankMovement;
 import org.example.bankback.domain.models.OriginBankMovement;
@@ -132,11 +133,18 @@ class BankMovementJpaDaoImplIntegrationTest {
     @Test
     void save_ShouldPersistMovement_WithCorrectOrigin() {
         // Arrange
+        BankAccount testBankAccount = new BankAccount(
+                testAccount.getId(),
+                testAccount.getIBAN(),
+                testAccount.getSaldo()
+        );
+
         BankMovement newMovement = new BankMovement(
                 null,
                 TypeBankMovement.DEBE,
                 OriginBankMovement.DOMICILIACION,
                 null,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("60.00"),
                 "Recibo agua"

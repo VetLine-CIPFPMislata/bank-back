@@ -11,6 +11,7 @@ import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.models.dto.PagoTarjetaDTO;
 import org.example.bankback.domain.models.dto.PagoTarjetaResponseDTO;
 import org.example.bankback.domain.service.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,16 +47,23 @@ public class BankController {
     }
 
     @PostMapping("/pago_tarjeta")
-    public ResponseEntity<PagoTarjetaResponse> pagarConTarjeta(@RequestBody PagoTarjetaRequest request) {
-        if (!bankApiTokenService.validateApiToken(request.autorizacion().api_token())) {
-            throw new ValidationException("API Token inválido. No autorizado para procesar pagos");
+    public ResponseEntity<?> pagarConTarjeta(@RequestBody PagoTarjetaRequest request) {
+        try {
+            if (!bankApiTokenService.validateApiToken(request.autorizacion().api_token())) {
+                throw new ValidationException("API Token inválido. No autorizado para procesar pagos");
+            }
+
+            PagoTarjetaDTO dto = mapper.toDTO(request);
+            PagoTarjetaResponseDTO responseDTO = pagoTarjetaService.procesarPago(dto);
+            PagoTarjetaResponse response = mapper.toResponse(responseDTO);
+
+            return ResponseEntity.ok(response);
+        } catch (ValidationException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno del servidor: " + ex.getMessage());
         }
-
-        PagoTarjetaDTO dto = mapper.toDTO(request);
-        PagoTarjetaResponseDTO responseDTO = pagoTarjetaService.procesarPago(dto);
-        PagoTarjetaResponse response = mapper.toResponse(responseDTO);
-
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/clientes/{clientId}/cuentas")
