@@ -1,5 +1,6 @@
 package org.example.bankback.domain;
 
+import org.example.bankback.domain.models.BankAccount;
 import org.example.bankback.domain.models.BankMovement;
 import org.example.bankback.domain.models.CreditCard;
 import org.example.bankback.domain.models.OriginBankMovement;
@@ -33,20 +34,25 @@ class BankMovementServiceImplTest {
 
     private BankMovement testMovement;
     private CreditCard testCreditCard;
+    private BankAccount testBankAccount;
 
     @BeforeEach
     void setUp() {
         testCreditCard = new CreditCard(1L, "4111111111111111", "2027-12", "123", "JUAN GARCIA");
         testCreditCard.setIdCuentaBancaria(1L);
 
+        testBankAccount = new BankAccount(1L, "ES1234567890123456789012", new BigDecimal("1000.00"));
+
         testMovement = new BankMovement(
                 1L,
                 TypeBankMovement.DEBE,
                 OriginBankMovement.TARJETA,
                 testCreditCard,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("100.00"),
                 "Compra en tienda"
+
         );
     }
 
@@ -142,6 +148,7 @@ class BankMovementServiceImplTest {
                 TypeBankMovement.DEBE,
                 OriginBankMovement.TARJETA,
                 testCreditCard,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("250.00"),
                 "Nueva compra"
@@ -152,6 +159,7 @@ class BankMovementServiceImplTest {
                 TypeBankMovement.DEBE,
                 OriginBankMovement.TARJETA,
                 testCreditCard,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("250.00"),
                 "Nueva compra"
@@ -175,9 +183,9 @@ class BankMovementServiceImplTest {
         
         Long creditCardId = 1L;
         BankMovement movement1 = new BankMovement(1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA,
-                testCreditCard, new Date(), new BigDecimal("100.00"), "Compra 1");
+                testCreditCard, testBankAccount, new Date(), new BigDecimal("100.00"), "Compra 1");
         BankMovement movement2 = new BankMovement(2L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA,
-                testCreditCard, new Date(), new BigDecimal("200.00"), "Compra 2");
+                testCreditCard, testBankAccount, new Date(), new BigDecimal("200.00"), "Compra 2");
 
         List<BankMovement> movements = Arrays.asList(movement1, movement2);
         when(bankMovementRepository.findAllByCreditCardId(creditCardId)).thenReturn(movements);
@@ -211,9 +219,9 @@ class BankMovementServiceImplTest {
         
         Long accountId = 1L;
         BankMovement movement1 = new BankMovement(1L, TypeBankMovement.DEBE, OriginBankMovement.TARJETA,
-                testCreditCard, new Date(), new BigDecimal("100.00"), "Compra 1");
+                testCreditCard, testBankAccount, new Date(), new BigDecimal("100.00"), "Compra 1");
         BankMovement movement2 = new BankMovement(2L, TypeBankMovement.HABER, OriginBankMovement.TRANSFERENCIA,
-                null, new Date(), new BigDecimal("500.00"), "Ingreso");
+                null, testBankAccount, new Date(), new BigDecimal("500.00"), "Ingreso");
 
         List<BankMovement> movements = Arrays.asList(movement1, movement2);
         when(bankMovementRepository.findAllByBankAccountId(accountId)).thenReturn(movements);
@@ -250,6 +258,7 @@ class BankMovementServiceImplTest {
                 TypeBankMovement.DEBE,
                 OriginBankMovement.TARJETA,
                 testCreditCard,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("100.00"),
                 "Pago con tarjeta"
@@ -274,6 +283,7 @@ class BankMovementServiceImplTest {
                 TypeBankMovement.HABER,
                 OriginBankMovement.TRANSFERENCIA,
                 null,
+                testBankAccount,
                 new Date(),
                 new BigDecimal("500.00"),
                 "Ingreso"
@@ -290,5 +300,3 @@ class BankMovementServiceImplTest {
         verify(bankMovementRepository).save(haberMovement);
     }
 }
-
-

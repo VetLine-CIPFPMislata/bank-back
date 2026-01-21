@@ -67,7 +67,6 @@ class BankControllerPagoTarjetaTest {
         );
 
         mockMvc = MockMvcBuilders.standaloneSetup(bankController)
-                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
 
         validRequest = new PagoTarjetaRequest(
@@ -312,5 +311,3 @@ class BankControllerPagoTarjetaTest {
         );
     }
 }
-
-

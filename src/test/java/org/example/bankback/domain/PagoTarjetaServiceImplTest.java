@@ -416,7 +416,7 @@ public class PagoTarjetaServiceImplTest {
 
         verify(bankAccountService, times(2)).save(any(BankAccount.class));
 
-        verify(bankMovementService).save(any(BankMovement.class));
+        verify(bankMovementService, times(2)).save(any(BankMovement.class));
     }
 
     @Test
@@ -434,13 +434,23 @@ public class PagoTarjetaServiceImplTest {
 
         
         ArgumentCaptor<BankMovement> movementCaptor = ArgumentCaptor.forClass(BankMovement.class);
-        verify(bankMovementService).save(movementCaptor.capture());
+        verify(bankMovementService, times(2)).save(movementCaptor.capture());
 
-        BankMovement savedMovement = movementCaptor.getValue();
-        assertNotNull(savedMovement);
-        assertEquals(new BigDecimal("567.67"), savedMovement.getImporte());
-        assertEquals("Comprar PC", savedMovement.getConcepto());
-        assertEquals(validCreditCard, savedMovement.getTarjetaCreditoOrigen());
+        var savedMovements = movementCaptor.getAllValues();
+        assertEquals(2, savedMovements.size());
+
+
+        BankMovement debeMovement = savedMovements.get(0);
+        assertNotNull(debeMovement);
+        assertEquals(new BigDecimal("567.67"), debeMovement.getImporte());
+        assertEquals("Comprar PC", debeMovement.getConcepto());
+        assertEquals(validCreditCard, debeMovement.getTarjetaCreditoOrigen());
+
+
+        BankMovement haberMovement = savedMovements.get(1);
+        assertNotNull(haberMovement);
+        assertEquals(new BigDecimal("567.67"), haberMovement.getImporte());
+        assertEquals("Comprar PC", haberMovement.getConcepto());
     }
 
     @Test
