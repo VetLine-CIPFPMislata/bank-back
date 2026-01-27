@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>org.example</groupId>
-    <artifactId>store-back</artifactId>
+    <artifactId>bank-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>store-back</name>
-    <description>store-back</description>
+    <name>bank-back</name>
+    <description>bank-back</description>
     <url/>
     <licenses>
         <license/>
