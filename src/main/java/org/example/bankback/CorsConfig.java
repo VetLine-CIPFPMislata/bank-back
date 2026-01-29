@@ -1,9 +1,3 @@
-package org.example.bankback;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 @Configuration
 public class CorsConfig {
 
@@ -13,8 +7,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*")  // Permite todos los orígenes
-                        .allowedMethods("*")  // Permite todos los métodos HTTP
+                        .allowedOrigins("http://bank-vetline.producciondaw.cip.fpmislata.com")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .exposedHeaders("Authorization", "Content-Type")
