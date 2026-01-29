@@ -12,14 +12,14 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("*") // Permite todas las URLs en desarrollo
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")  // Permite todos los orígenes
+                        .allowedMethods("*")  // Permite todos los métodos HTTP
                         .allowedHeaders("*")
-                        .exposedHeaders("Authorization")
+                        .allowCredentials(true)
+                        .exposedHeaders("Authorization", "Content-Type")
                         .maxAge(3600);
             }
         };
     }
 }
-
